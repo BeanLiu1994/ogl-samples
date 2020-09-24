@@ -1,3 +1,4 @@
+slightly modified for osmesa testing.
 ---
 # OpenGL Samples Pack
 

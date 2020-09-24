@@ -104,13 +104,18 @@ framework::framework
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, this->Major);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, this->Minor);
 #		if defined(__APPLE__)
+#       if defined(HEADLESS_RENDER)
+			static_assert(false, "APPLE is not supported yet.");
+#       endif
 			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #		else
 			if(Profile != ES)
 			{
 				glfwWindowHint(GLFW_OPENGL_PROFILE, Profile == CORE ? GLFW_OPENGL_CORE_PROFILE : GLFW_OPENGL_COMPAT_PROFILE);
-				glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, Profile == CORE ? GL_TRUE : GL_FALSE);
+#               ifndef HEADLESS_RENDER				
+					glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, Profile == CORE ? GL_TRUE : GL_FALSE);
+#               endif
 			}
 
 #			if defined(_DEBUG)

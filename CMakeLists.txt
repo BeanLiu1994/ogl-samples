@@ -7,6 +7,12 @@ endif()
 set(OGL_SAMPLES_NAME ogl-samples)
 set(FRAMEWORK_NAME framework)
 
+option(HEADLESS_RENDER "use osmesa" OFF)
+
+if(HEADLESS_RENDER)
+add_definitions(-DHEADLESS_RENDER)
+endif()
+
 project(${OGL_SAMPLES_NAME})
 enable_testing()
 
@@ -37,14 +43,23 @@ endif()
 
 ################################
 # Add GLEW
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external)
+set(GLEW_DIRECTORY glew)
+if(HEADLESS_RENDER)
+add_definitions(-DGLEW_OSMESA)
+else()
 add_definitions(-DGLEW_STATIC)
+endif()
+set(GLEW_OSMESA ON)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/${GLEW_DIRECTORY}/include)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/${GLEW_DIRECTORY})
 
 ################################
 # Add GLFW
 
-set(GLFW_DIRECTORY glfw-3.1.1)
+set(GLFW_DIRECTORY glfw-3.3.2)
+if(HEADLESS_RENDER)
+	set(GLFW_USE_OSMESA ON)
+endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/${GLFW_DIRECTORY}/include)
 
 set(GLFW_INSTALL OFF CACHE STRING "" FORCE)
